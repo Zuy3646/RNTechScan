@@ -1,0 +1,43 @@
+# Пример файла конфигурации для сканера уязвимостей
+# Скопируйте этот файл в config.yaml и измените по необходимости
+
+scanner:
+  max_threads: 10              # Максимальное количество одновременных потоков
+  timeout: 30                  # Тайм-аут для отдельных сканов (секунды)
+  delay_between_requests: 0.1  # Задержка между запросами (секунды)
+  user_agent: "RNTechScan/1.0"  # Строка User Agent для HTTP запросов
+  max_retries: 3               # Максимальное количество повторов для неудачных запросов
+  output_format: "json"        # Формат вывода по умолчанию
+
+modules:
+  network:
+    enabled: true
+    port_scan_range: "1-1000"  # Port range to scan (e.g., "1-1000" or "80,443,8080")
+    scan_type: "tcp"           # Scan type: tcp, udp, or both
+    scan_timeout: 3            # Timeout for individual port scans
+    max_threads: 50            # Maximum threads for port scanning
+
+  web:
+    enabled: true
+    follow_redirects: true     # Follow HTTP redirects
+    verify_ssl: false          # Verify SSL certificates
+    max_page_depth: 3          # Maximum depth for crawling web pages
+    user_agent: "VulnScanner/1.0"
+
+  system:
+    enabled: true
+    check_services: true       # Check running services
+    check_files: true          # Check file permissions
+    check_permissions: true    # Check user permissions
+    check_packages: true       # Check for outdated packages
+
+reporting:
+  output_dir: "reports"        # Directory for output reports
+  format: ["json", "html"]     # Report formats to generate
+  include_details: true        # Include detailed information in reports
+  severity_levels: ["critical", "high", "medium", "low", "info"]  # Severity levels to include
+
+logging:
+  level: "INFO"                # Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  file: "scanner.log"          # Log file name
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"  # Log format
