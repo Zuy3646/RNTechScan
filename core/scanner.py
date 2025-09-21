@@ -43,19 +43,26 @@ class ScanJob:
             self.created_at = time.time()
 
 
-@dataclass
 class ScanSession:
     """Представляет полную сессию сканирования."""
-    session_id: str
-    targets: List[ScanTarget]
-    start_time: float
-    end_time: Optional[float] = None
-    status: str = "running"
-    results: Optional[List[ScanResult]] = None
-    
-    def __post_init__(self):
-        if self.results is None:
-            self.results = []
+    def __init__(self, session_id: str, targets: List[ScanTarget], start_time: float):
+        self.session_id = session_id
+        self.targets = targets
+        self.start_time = start_time
+        self.end_time: Optional[float] = None
+        self.status: str = "running"
+        self.results: List[ScanResult] = []
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Преобразовать сессию в словарь."""
+        return {
+            "session_id": self.session_id,
+            "targets": [t.to_dict() for t in self.targets],
+            "start_time": self.start_time,
+            "end_time": self.end_time,
+            "status": self.status,
+            "results": [r.to_dict() for r in self.results],
+        }
 
 
 class ScanEngine:

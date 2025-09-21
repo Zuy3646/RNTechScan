@@ -17,6 +17,8 @@ class SeverityLevel(Enum):
     INFO = "info"
 
 
+from dataclasses import asdict
+
 @dataclass
 class Vulnerability:
     """Представляет обнаруженную уязвимость."""
@@ -39,6 +41,10 @@ class Vulnerability:
         if self.references is None:
             self.references = []
 
+    def to_dict(self) -> Dict[str, Any]:
+        """Преобразовать уязвимость в словарь."""
+        return asdict(self)
+
 
 @dataclass
 class ScanTarget:
@@ -55,6 +61,10 @@ class ScanTarget:
             self.services = []
         if self.metadata is None:
             self.metadata = {}
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Преобразовать цель в словарь."""
+        return asdict(self)
 
 
 class ScanResult:
@@ -95,6 +105,19 @@ class ScanResult:
     def get_vulnerabilities_by_severity(self, severity: SeverityLevel) -> List[Vulnerability]:
         """Получить уязвимости, отфильтрованные по уровню опасности."""
         return [v for v in self.vulnerabilities if v.severity == severity]
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Преобразовать результат в словарь."""
+        return {
+            "target": self.target.to_dict(),
+            "plugin_name": self.plugin_name,
+            "vulnerabilities": [v.to_dict() for v in self.vulnerabilities],
+            "start_time": self.start_time,
+            "end_time": self.end_time,
+            "status": self.status,
+            "error": self.error,
+            "metadata": self.metadata,
+        }
 
 
 class BasePlugin(ABC):
