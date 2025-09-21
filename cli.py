@@ -8,10 +8,6 @@ import signal
 from typing import List, Optional, Dict, Any
 from pathlib import Path
 
-# Добавить текущую директорию в путь Python для импорта
-current_dir = Path(__file__).parent
-sys.path.insert(0, str(current_dir))
-
 from core.scanner import ScanEngine
 from core.plugin_base import ScanTarget
 from modules.network.port_scanner import PortScannerPlugin
@@ -301,7 +297,7 @@ class VulnScannerCLI:
                         'text' if format_from_ext == 'txt' else format_from_ext
                     )
                     if generator:
-                        report_file = generator.generate_report(session, args.output)
+                        report_file = generator.generate_report(session.to_dict(), args.output)
                         print(f"Report generated: {report_file}")
                     else:
                         print(f"Ошибка: Неизвестный формат из расширения файла: {format_from_ext}")
@@ -309,7 +305,7 @@ class VulnScannerCLI:
                     print(f"Ошибка: Неизвестное расширение файла: {output_path.suffix}")
             else:
                 # Сгенерировать отчёты в указанных форматах
-                report_files = self.report_manager.generate_reports(session, formats)
+                report_files = self.report_manager.generate_reports(session.to_dict(), formats)
                 for report_file in report_files:
                     print(f"Report generated: {report_file}")
                     
